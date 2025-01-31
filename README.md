@@ -2,19 +2,19 @@
 # CMS de 4 capas con WordPress
 >*Realizado por José Manuel Martín Jaén*
 >
-##ÍNDICE
+>##ÍNDICE
   1. [Introducción](#introducción)
   2. [Configuración Vagrantfile y Scripts](#configuración-base)
   3. [Comprobación de funcionamiento](#comprobación-de-funcionamiento)
   4. [Conclusión](#conclusión)
-## Introducción: 
-+ La práctica consiste en desplegar un CMS (OwnCloud) sobre una infraestructura en alta disponibilidad basada en la pila LAMP, solo que esta vez será con nginx en vez de apache.
-+ Esta infraestructura está organizada en tres capas: un balanceador con Nginx como primera capa, dos servidores web con Nginx y un servidor NFS con PHP-FPM como segunda capa, y una base de datos MariaDB como tercera capa.
-+ Para aumentar nuestra seguridad tanto la segunda capa como la tercera, no tendrán acceso a la capa publica, a excepcion de la primera, el balanceador, ya que será necesario que tenga acceso público.
-+ Uno de los objetivos es garantizar la disponibilidad mediante la configuración de un balanceador de carga, almacenar los datos de nuestro CMS en un servidor NFS y un sistema gestor de base de datos.
-## Configuración Vagrantfile y Scripts.
-+ Configuración de vagrantfile.
-> Este es el contenido que debemos tener en nuestro archivo para que todo se configure correctamente, es extremadamente importante el orden de creacion y configuración de nuestras máquinas virtuales, en este supuesto práctico, debemos de tener en cuenta las máquinas que en un principio son independientes y que no dependen de otras, en este caso lo son, nuestro servidor de base de datos y el servidor NFS, debemos asegurarnos de que son los primeros en configurarse, ya que de ellos dependen los demas, el orden sería el siguiente, Servidor BBDD, servidor NFS, servidores WEB, Balanceador.
+## Introducción
+Este proyecto despliega un CMS (OwnCloud) sobre una infraestructura en alta disponibilidad basada en la pila LAMP, utilizando Nginx en lugar de Apache. La infraestructura se organiza en tres capas: un balanceador con Nginx como primera capa, dos servidores web con Nginx y un servidor NFS con PHP-FPM como segunda capa, y una base de datos MariaDB como tercera capa. El objetivo es garantizar la disponibilidad mediante un balanceador de carga, almacenar los datos en un servidor NFS y gestionar la base de datos de manera segura.
+## Configuración Vagrantfile y Scripts
+El archivo `Vagrantfile` define y configura las máquinas virtuales necesarias, asegurando el orden correcto de creación y configuración. Los scripts de Bash automatizan la instalación y configuración de cada máquina:
+- **Servidor de Base de Datos**: Instala MariaDB y configura el acceso remoto.
+- **Servidor NFS**: Configura NFS para compartir archivos y prepara OwnCloud.
+- **Servidores Web**: Instalan Nginx, montan la carpeta NFS y configuran PHP-FPM.
+- **Balanceador**: Configura Nginx como balanceador de carga.
 >```bash
 >Vagrant.configure("2") do |config|
 >  config.vm.box = "debian/bullseye64"
@@ -222,6 +222,6 @@
 >
 >sudo systemctl restart nginx
 ## Comprobación de funcionamiento
-
+(He tenido ciertos problemas técnicos con mi portatil, he pasado el fin de semana en badajoz y estaba realizando la práctica en mi ordenador de sobremesa, a lo largo del fin de semana subiré la prueba de funcionamiento, ya que en el portatil me daba un error con un archivo al intentar descargar el box, y como tenia OBS en el portatil, pensaba grabarlo todo en él.)
 ## Conclusión
-+ Una infraestructura algo complicada, con varios niveles y dependencias, varias complicaciones, sobretodo con el direccionamiento IP, pero entre otras, problemas técnicos propios, está completamente automatizado, simplemente con lanzarlo ya se puede entrar en el owncloud.
+Aunque la infraestructura es compleja y presenta desafíos técnicos, especialmente en el direccionamiento IP, el proceso está completamente automatizado. Esto permite desplegar OwnCloud de manera eficiente y garantizar su disponibilidad. Durante el desarrollo del proyecto, tuve que pedir consejo a algunos compañeros(sobretodo con el direccionamiento IP) para resolver ciertos problemas técnicos, lo que me ayudó a comprender mejor los fallos que llevo arrastrando desde el año pasado.
