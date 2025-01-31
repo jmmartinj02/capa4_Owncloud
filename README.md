@@ -11,7 +11,7 @@
 + Esta infraestructura está organizada en tres capas: un balanceador con Nginx como primera capa, dos servidores web con Nginx y un servidor NFS con PHP-FPM como segunda capa, y una base de datos MariaDB como tercera capa.
 + Para aumentar nuestra seguridad tanto la segunda capa como la tercera, no tendrán acceso a la capa publica, a excepcion de la primera, el balanceador, ya que será necesario que tenga acceso público.
 + Uno de los objetivos es garantizar la disponibilidad mediante la configuración de un balanceador de carga, almacenar los datos de nuestro CMS en un servidor NFS y un sistema gestor de base de datos.
-## Configuración base
+## Configuración Vagrantfile y Scripts.
 + Configuración de vagrantfile.
 > Este es el contenido que debemos tener en nuestro archivo para que todo se configure correctamente, es extremadamente importante el orden de creacion y configuración de nuestras máquinas virtuales, en este supuesto práctico, debemos de tener en cuenta las máquinas que en un principio son independientes y que no dependen de otras, en este caso lo son, nuestro servidor de base de datos y el servidor NFS, debemos asegurarnos de que son los primeros en configurarse, ya que de ellos dependen los demas, el orden sería el siguiente, Servidor BBDD, servidor NFS, servidores WEB, Balanceador.
 >```bash
