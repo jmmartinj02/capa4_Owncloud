@@ -16,8 +16,45 @@
 ## Configuración base
 + Configuración de vagrantfile.
 > Este es el contenido que debemos tener en nuestro archivo para que todo se configure correctamente, es extremadamente importante el orden de creacion y configuración de nuestras máquinas virtuales, en este supuesto práctico, debemos de tener en cuenta las máquinas que en un principio son independientes y que no dependen de otras, en este caso lo son, nuestro servidor de base de datos y el servidor NFS, debemos asegurarnos de que son los primeros en configurarse, ya que de ellos dependen los demas, el orden sería el siguiente, Servidor BBDD, servidor NFS, servidores WEB, Balanceador.
+>```bash
+>Vagrant.configure("2") do |config|
+>  config.vm.box = "debian/bullseye64"
 >
->![image](https://github.com/user-attachments/assets/79cacda3-c821-4ed0-8c5c-46f079d473d0)
+>  config.vm.define "JMMartinBBDD" do |app|
+>    app.vm.hostname = "JMMartinBBDD"
+>    app.vm.network "private_network", ip: "192.168.60.10", virtualbox_intnet: "red_BBDD"
+>    app.vm.provision "shell", path: "BBDD.sh"
+>  end
+>
+>  config.vm.define "JMMartinNFS" do |app|
+>    app.vm.hostname = "JMMartinNFS"
+>    app.vm.network "private_network", ip: "192.168.56.12", virtualbox_intnet: "red1"
+>    app.vm.network "private_network", ip: "192.168.60.13", virtualbox_intnet: "red_BBDD"
+>    app.vm.provision "shell", path: "nfs.sh"
+>  end
+>
+>  config.vm.define "JMMartinWEB1" do |app|
+>    app.vm.hostname = "JMMartinWEB1"
+>    app.vm.network "private_network", ip: "192.168.56.10", virtualbox_intnet: "red1"
+>    app.vm.network "private_network", ip: "192.168.60.11", virtualbox_intnet: "red_BBDD"
+>    app.vm.provision "shell", path: "webs.sh"
+>  end
+>
+>  config.vm.define "JMMartinWEB2" do |app|
+>    app.vm.hostname = "JMMartinWEB2"
+>    app.vm.network "private_network", ip: "192.168.56.11", virtualbox_intnet: "red1"
+>    app.vm.network "private_network", ip: "192.168.60.12", virtualbox_intnet: "red_BDDD"
+>    app.vm.provision "shell", path: "webs.sh"
+>  end
+>
+>  config.vm.define "JMMartinBAL" do |app|
+>    app.vm.hostname = "JMMartinBAL"
+>    app.vm.network "public_network"
+>    app.vm.network "private_network", ip: "192.168.56.1", virtualbox_intnet: "red1"
+>    app.vm.provision "shell", path: "balanceador.sh"
+>  end 
+>end
+
 + Estos son los scripts que usaremos para que las máquinas estén listas al iniciarlas.
 >*Script de las maquinas nginx:*
 >
@@ -25,7 +62,7 @@
 >
 >*Script de configuracion de la base de datos:*  
 >![image](https://github.com/user-attachments/assets/7f7c4b62-4bdc-414c-8bd1-07d376eea2bb)
-
+>*Script de configuracion del servidor NFS:*  
 ## Configuración Apache y PHP
 + Despues de inciar las máquinas con vagrant up y de hacer un vagrant provision, iniciamos la maquina de apache con vagrant ssh JoseMMartApache, donde creamos y modificamos el archivo info.php en el directorio /var/www/html.
 >*Aquí se puede observar el contenido del archivo*
