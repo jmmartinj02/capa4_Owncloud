@@ -1,7 +1,8 @@
 
 # CMS de 4 capas con WordPress
 >*Realizado por José Manuel Martín Jaén*
->##ÍNDICE
+>
+##ÍNDICE
   1. [Introducción](#introducción)
   2. [Configuración Vagrantfile y Scripts](#configuración-base)
   3. [Comprobación de funcionamiento](#comprobación-de-funcionamiento)
