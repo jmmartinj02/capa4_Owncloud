@@ -15,7 +15,7 @@
 + Uno de los objetivos es garantizar la disponibilidad mediante la configuración de un balanceador de carga, almacenar los datos de nuestro CMS en un servidor NFS y un sistema gestor de base de datos.
 ## Configuración base
 + Configuración de vagrantfile.
->*Este es el contenido que debemos tener en nuestro archivo para que todo se configure correctamente, es extremadamente importante el orden de creacion y configuración de nuestras máquinas virtuales, en este supuesto práctico, debemos de tener en cuenta las máquinas que en un principio son independientes y que no dependen de otras, en este caso lo son, nuestro servidor de base de datos y el servidor NFS, debemos asegurarnos de que son los primeros en configurarse, ya que de ellos dependen los demas, el orden sería el siguiente, Servidor BBDD, servidor NFS, servidores WEB, Balanceador*
+>*+ Este es el contenido que debemos tener en nuestro archivo para que todo se configure correctamente, es extremadamente importante el orden de creacion y configuración de nuestras máquinas virtuales, en este supuesto práctico, debemos de tener en cuenta las máquinas que en un principio son independientes y que no dependen de otras, en este caso lo son, nuestro servidor de base de datos y el servidor NFS, debemos asegurarnos de que son los primeros en configurarse, ya que de ellos dependen los demas, el orden sería el siguiente, Servidor BBDD, servidor NFS, servidores WEB, Balanceador. +*
 >![image](https://github.com/user-attachments/assets/79cacda3-c821-4ed0-8c5c-46f079d473d0)
 + Estos son los scripts que usaremos para que las máquinas estén listas al iniciarlas.
 >*Script de las maquinas nginx:*
