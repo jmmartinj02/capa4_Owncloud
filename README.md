@@ -16,11 +16,11 @@
 ## Configuración base
 + Configuración de vagrantfile.
 >*Este es el contenido que debemos tener en nuestro archivo para que todo se configure correctamente:*
->![image](https://github.com/user-attachments/assets/06686413-2842-4938-87eb-35d4ba8575b5)
+>![image](https://github.com/user-attachments/assets/79cacda3-c821-4ed0-8c5c-46f079d473d0)
 + Estos son los scripts que usaremos para que las máquinas estén listas al iniciarlas.
->*Script de la máquina Apache:*
+>*Script de las maquinas nginx:*
 >
->![image](https://github.com/user-attachments/assets/43cbb20a-adeb-4151-af45-66111e347153)
+>![image](https://github.com/user-attachments/assets/f51201c8-0489-4567-9d45-546109cdf59a)
 >
 >*Script de la máquina MariaDB:*  
 >![image](https://github.com/user-attachments/assets/6a4039b4-9064-471a-80f2-65ae2582f355)
