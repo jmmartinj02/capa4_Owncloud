@@ -15,15 +15,16 @@
 + Uno de los objetivos es garantizar la disponibilidad mediante la configuración de un balanceador de carga, almacenar los datos de nuestro CMS en un servidor NFS y un sistema gestor de base de datos.
 ## Configuración base
 + Configuración de vagrantfile.
->*Este es el contenido que debemos tener en nuestro archivo para que todo se configure correctamente:*
+>*Este es el contenido que debemos tener en nuestro archivo para que todo se configure correctamente, es extremadamente importante el orden de creacion y configuración de nuestras máquinas virtuales, en este supuesto práctico, debemos de tener en cuenta las máquinas que en un principio son independientes y que no dependen de otras, en este caso lo son, nuestro servidor de base de datos y el servidor NFS, debemos asegurarnos de que son los primeros en configurarse, ya que de ellos dependen los demas, el orden sería el siguiente, Servidor BBDD, servidor NFS, servidores WEB, Balanceador*
 >![image](https://github.com/user-attachments/assets/79cacda3-c821-4ed0-8c5c-46f079d473d0)
 + Estos son los scripts que usaremos para que las máquinas estén listas al iniciarlas.
 >*Script de las maquinas nginx:*
 >
 >![image](https://github.com/user-attachments/assets/f51201c8-0489-4567-9d45-546109cdf59a)
 >
->*Script de la máquina MariaDB:*  
->![image](https://github.com/user-attachments/assets/6a4039b4-9064-471a-80f2-65ae2582f355)
+>*Script de configuracion de la base de datos:*  
+>![image](https://github.com/user-attachments/assets/7f7c4b62-4bdc-414c-8bd1-07d376eea2bb)
+
 ## Configuración Apache y PHP
 + Despues de inciar las máquinas con vagrant up y de hacer un vagrant provision, iniciamos la maquina de apache con vagrant ssh JoseMMartApache, donde creamos y modificamos el archivo info.php en el directorio /var/www/html.
 >*Aquí se puede observar el contenido del archivo*
