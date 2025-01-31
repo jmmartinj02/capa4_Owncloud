@@ -128,7 +128,7 @@ El archivo `Vagrantfile` define y configura las máquinas virtuales necesarias, 
 >
 >sudo ip route del default 
 
-*Script de configuracion del servidor NFS:* 
+>*Script de configuracion del servidor NFS:* 
 >```bash
 >#!/bin/bash
 ># Actualizar repositorios e instalar NFS y PHP 7.4
@@ -190,7 +190,7 @@ El archivo `Vagrantfile` define y configura las máquinas virtuales necesarias, 
 >sudo ip route del default
 
 >
-*Script de configuracion del Balanceador:*
+>*Script de configuracion del Balanceador:*
 >```bash
 >#!/bin/bash
 >
