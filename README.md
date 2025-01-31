@@ -3,12 +3,10 @@
 >*Realizado por José Manuel Martín Jaén*
 >##ÍNDICE
   1. [Introducción](#introducción)
-  2. [Configuración base](#configuración-base)
-  3. [Configuración Apache y PHP](#configuración-apache-y-php)
-  4. [Configuración de MariaDB](#configuración-de-mariadb)
-  5. [Comprobación de funcionamiento](#comprobación-de-funcionamiento)
-  6. [Conclusión](#conclusión)
-  7. ## Introducción: 
+  2. [Configuración Vagrantfile y Scripts](#configuración-base)
+  3. [Comprobación de funcionamiento](#comprobación-de-funcionamiento)
+  4. [Conclusión](#conclusión)
+## Introducción: 
 + La práctica consiste en desplegar un CMS (OwnCloud) sobre una infraestructura en alta disponibilidad basada en la pila LAMP, solo que esta vez será con nginx en vez de apache.
 + Esta infraestructura está organizada en tres capas: un balanceador con Nginx como primera capa, dos servidores web con Nginx y un servidor NFS con PHP-FPM como segunda capa, y una base de datos MariaDB como tercera capa.
 + Para aumentar nuestra seguridad tanto la segunda capa como la tercera, no tendrán acceso a la capa publica, a excepcion de la primera, el balanceador, ya que será necesario que tenga acceso público.
@@ -169,7 +167,7 @@
 >);
 >EOF
 ># Modificar el archivo config.php 
->echo "Añadiendo dominios de confianza a la configuración de OwnCloud..."
+>echo "Añadiendo dominios de confianza a la configuración de OwnCloud."
 >php -r "
 >  \$configFile = '/var/www/html/owncloud/config/config.php';
 >  if (file_exists(\$configFile)) {
@@ -200,7 +198,7 @@
 >sudo apt upgrade -y
 >sudo apt-get install -y nginx
 >
-># Configuracion de Nginx como balanceador de carga
+># Configuracion de Nginx como balanceador de carga, se deben de colocar las dos direcciones ip de sus backends
 >cat <<EOF > /etc/nginx/sites-available/default
 >upstream backend_servers {
 >    server 192.168.56.10;
@@ -222,16 +220,7 @@
 >EOF
 >
 >sudo systemctl restart nginx
-
->## Configuración Apache y PHP
-
 ## Comprobación de funcionamiento
-+ Volvemos a la máquina de Apache e iniciamos sesión con el usuario creado anteriormente en mysql usando la IP de la máquina con Mysql y accedemos a la base de datos.
->![image](https://github.com/user-attachments/assets/0b99cc7d-dfa7-4a25-a8a7-92c4e832a8d8)
-+ Finalmente introducimos en el navegador la ip del servidor apache, en mi caso 172.16.2.14.
->*En la barra de busqueda tendríamos que poner algo tal que así http://172.16.2.14*
->![image](https://github.com/user-attachments/assets/8bbb833b-3c0e-48fe-bc6c-5992398dee37)
-+ Para comprobar que todo se ha hecho correctamente introducimos información en la base de datos.
->![image](https://github.com/user-attachments/assets/e70a3f6f-3361-42ab-a62a-29602fb4b98b)
+
 ## Conclusión
-+ Una infraestructura sencilla, dos niveles, no hay muchas complicaciones, pero en ciertos puntos uno puede llegar a perderse, o que algo no funcione, normalmente suele ser algún error de sintaxis, en mi caso porque en el bind-address coloqué 127.16.2.15 en lugar de 172.16.2.15.
++ Una infraestructura algo complicada, con varios niveles y dependencias, varias complicaciones, sobretodo con el direccionamiento IP, pero entre otras, problemas técnicos propios, está completamente automatizado, simplemente con lanzarlo ya se puede entrar en el owncloud.
