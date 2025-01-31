@@ -129,8 +129,100 @@
 >
 >sudo ip route del default 
 
-*Script de configuracion del servidor NFS:*  
-## Configuración Apache y PHP
+*Script de configuracion del servidor NFS:* 
+>```bash
+>#!/bin/bash
+># Actualizar repositorios e instalar NFS y PHP 7.4
+>sudo apt-get update -y
+>sudo apt upgrade -y
+>sudo apt-get install -y nfs-kernel-server php7.4 php7.4-fpm php7.4-mysql php7.4-gd php7.4-xml php7.4-mbstring php7.4-curl php7.4-zip php7.4-intl php7.4-ldap unzip
+># Crear carpeta compartida para OwnCloud y configurar permisos
+>sudo mkdir -p /var/www/html
+>sudo chown -R www-data:www-data /var/www/html
+>sudo chmod -R 755 /var/www/html
+># Configurar NFS para compartir la carpeta, tus direcciones ip de los dos servidores web.
+>echo "/var/www/html 192.168.56.11(rw,sync,no_subtree_check)" >> /etc/exports
+>echo "/var/www/html 192.168.56.10(rw,sync,no_subtree_check)" >> /etc/exports
+># Reiniciar NFS para aplicar cambios
+>sudo exportfs -a
+>sudo systemctl restart nfs-kernel-server
+># Descargar, descomprimir y mover owncloud al directorio html
+>cd /tmp
+>wget https://download.owncloud.com/server/stable/owncloud-10.9.1.zip
+>unzip owncloud-10.9.1.zip
+>mv owncloud /var/www/html/
+># Configurar permisos de OwnCloud
+>sudo chown -R www-data:www-data /var/www/html/owncloud
+>sudo chmod -R 755 /var/www/html/owncloud
+># Crear archivo de configuración inicial para OwnCloud
+>cat <<EOF > /var/www/html/owncloud/config/autoconfig.php
+><?php
+>\$AUTOCONFIG = array(
+>  "dbtype" => "mysql",
+>  "dbname" => "owncloud",
+>  "dbuser" => "owncloud",
+>  "dbpassword" => "1234",
+>  "dbhost" => "192.168.60.10",
+>  "directory" => "/var/www/html/owncloud/data",
+>  "adminlogin" => "jose",
+>  "adminpass" => "jose"
+>);
+>EOF
+># Modificar el archivo config.php 
+>echo "Añadiendo dominios de confianza a la configuración de OwnCloud..."
+>php -r "
+>  \$configFile = '/var/www/html/owncloud/config/config.php';
+>  if (file_exists(\$configFile)) {
+>    \$config = include(\$configFile);
+>    \$config['trusted_domains'] = array(
+>      'localhost',
+>      'localhost:8080',
+>     '192.168.56.10',
+>      '192.168.56.11',
+>      '192.168.56.12',
+>    );
+>    file_put_contents(\$configFile, '<?php return ' . var_export(\$config, true) . ';');
+>  } else {
+>    echo 'No se pudo encontrar el archivo config.php';
+>  }
+>"
+>sed -i 's/^listen = .*/listen = 192.168.56.12:9000/' /etc/php/7.4/fpm/pool.d/www.conf
+>sudo systemctl restart php7.4-fpm
+>sudo ip route del default
+
+*Script de configuracion del Balanceador:*
+>```bash
+>#!/bin/bash
+>
+># Actualizar repositorios e instalar nginx
+>sudo apt-get update -y
+>sudo apt upgrade -y
+>sudo apt-get install -y nginx
+>
+># Configuracion de Nginx como balanceador de carga
+>cat <<EOF > /etc/nginx/sites-available/default
+>upstream backend_servers {
+>    server 192.168.56.10;
+>    server 192.168.56.11;
+>}
+>
+>server {
+>    listen 80;
+>    server_name localhost;
+>
+>    location / {
+>        proxy_pass http://backend_servers;
+>        proxy_set_header Host \$host;
+>        proxy_set_header X-Real-IP \$remote_addr;
+>        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+>    }
+>}
+>
+>EOF
+>
+>sudo systemctl restart nginx
+
+>## Configuración Apache y PHP
 + Despues de inciar las máquinas con vagrant up y de hacer un vagrant provision, iniciamos la maquina de apache con vagrant ssh JoseMMartApache, donde creamos y modificamos el archivo info.php en el directorio /var/www/html.
 >*Aquí se puede observar el contenido del archivo*
 >![image](https://github.com/jmmartinj02/Pila-LAMP/assets/146434706/0fa43350-3222-442c-8330-e6ad34c1e7f2)
