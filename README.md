@@ -106,9 +106,30 @@
 >
 >sudo ip route del default 
 
->*Script de configuracion de la base de datos:*  
->![image](https://github.com/user-attachments/assets/7f7c4b62-4bdc-414c-8bd1-07d376eea2bb)
->*Script de configuracion del servidor NFS:*  
+>*Script de configuracion de la base de datos:*
+>```bash
+>#!/bin/bash
+>
+># Actualizar repositorios e instalar MariaDB
+>sudo apt-get update -y
+>sudo apt upgrade -y
+>sudo apt-get install -y mariadb-server
+>
+># Configurar MariaDB para permitir acceso remoto desde los servidores web
+>sed -i 's/bind-address.*/bind-address = 192.168.60.10/' /etc/mysql/mariadb.conf.d/50-server.cnf
+>
+>sudo systemctl restart mariadb
+>
+>mysql -u root <<EOF
+>CREATE DATABASE owncloud;
+>CREATE USER 'owncloud'@'192.168.60.%' IDENTIFIED BY '1234';
+>GRANT ALL PRIVILEGES ON owncloud.* TO 'owncloud'@'192.168.60.%';
+>FLUSH PRIVILEGES;
+>EOF
+>
+>sudo ip route del default 
+
+*Script de configuracion del servidor NFS:*  
 ## Configuración Apache y PHP
 + Despues de inciar las máquinas con vagrant up y de hacer un vagrant provision, iniciamos la maquina de apache con vagrant ssh JoseMMartApache, donde creamos y modificamos el archivo info.php en el directorio /var/www/html.
 >*Aquí se puede observar el contenido del archivo*
